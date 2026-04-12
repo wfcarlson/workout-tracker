@@ -1,0 +1,76 @@
+[
+  {
+    "id": "shoulders_back_arms",
+    "name": "Shoulders, Back + Arms",
+    "icon": "💪",
+    "groups": [
+      { "label": "Superset", "exercises": [{ "id": "ohp", "scheme": "135×8, 155×4, 155×4" }, { "id": "pullups_bw", "scheme": "3 × 8–12" }] },
+      { "label": "Superset", "exercises": [{ "id": "barbell_row", "scheme": "3×8, ~135 lbs" }, { "id": "shoulder_raises", "scheme": "3×10–12, 18.5 lb DBs" }] },
+      { "label": null, "exercises": [{ "id": "face_pulls", "scheme": "3×15–20, light" }] },
+      { "label": null, "exercises": [{ "id": "lat_pullover", "scheme": "3×8–10, 30–35 lbs" }] },
+      { "label": null, "choices": [{ "id": "hammer_curls", "scheme": "3×12–15, 20 lb DBs" }, { "id": "zottman_curls", "scheme": "3×12–15, 20 lb DBs" }] },
+      { "label": null, "exercises": [{ "id": "ez_curls", "scheme": "3×7, 60 lbs" }] },
+      { "label": null, "exercises": [{ "id": "forearm_circuit", "scheme": "Circuit" }] }
+    ]
+  },
+  {
+    "id": "legs",
+    "name": "Legs A / B",
+    "icon": "🦵",
+    "groups": [
+      {
+        "label": "Warmup Circuit — 3 rounds",
+        "choices": [{ "id": "calf_raises_straight", "scheme": "8–10ea, 15–20 lbs" }, { "id": "calf_raises_bent", "scheme": "8–10ea, 15–20 lbs" }],
+        "exercises": [{ "id": "tib_raises", "scheme": "16–22 reps" }, { "id": "groin_lunges", "scheme": "8 reps, 25 lbs" }]
+      },
+      {
+        "label": "Superset — pick one each",
+        "choices": [{ "id": "hip_flexor_raises", "scheme": "3×10–12" }, { "id": "atg_lunges", "scheme": "3×5–8ea, 40–65 lbs" }],
+        "choices2": [{ "id": "zercher_dl", "scheme": "3×8, 135–145 lbs" }, { "id": "jefferson_curls", "scheme": "3×10, 65 lbs" }]
+      },
+      { "label": null, "exercises": [{ "id": "heavy_squat", "scheme": "255–285+, 5–6 reps" }] },
+      {
+        "label": "Lower Back Circuit (optional) — 3 rounds",
+        "exercises": [
+          { "id": "ql_curls", "scheme": "10 reps, 15–20 lbs" },
+          { "id": "hip_hinges", "scheme": "10 reps, 45 lbs" },
+          { "id": "piriformis", "scheme": "12 reps" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "chest_arms",
+    "name": "Chest + Arms",
+    "icon": "🏋️",
+    "groups": [
+      { "label": "Warmup", "exercises": [{ "id": "rotator_cuff", "scheme": "3×15, 20 lbs" }] },
+      { "label": null, "exercises": [{ "id": "flat_bench", "scheme": "2×6–8, 245 lbs" }] },
+      { "label": "Superset", "exercises": [{ "id": "wpullups", "scheme": "3–4×5–7, +25 lbs" }, { "id": "wdips", "scheme": "3–4×5–6, +25 lbs" }] },
+      { "label": "Superset", "exercises": [{ "id": "db_incline", "scheme": "3×8–10, 50 lb DBs" }, { "id": "preacher_curls", "scheme": "3×6–8, 25 lb DBs" }] },
+      { "label": "Superset", "exercises": [{ "id": "skull_crushers", "scheme": "3×8–12, 30 lb DBs" }, { "id": "lat_stretch_chest", "scheme": "3×8–10, 30 lbs" }] }
+    ]
+  },
+  {
+    "id": "aux_legs",
+    "name": "Aux Legs / Mobility",
+    "icon": "🧘",
+    "groups": [
+      {
+        "label": "Pick what you need",
+        "exercises": [
+          { "id": "ql_curls", "scheme": "10 reps, 15–20 lbs" },
+          { "id": "hip_hinges", "scheme": "10 reps, 45 lbs" },
+          { "id": "piriformis", "scheme": "12 reps" },
+          { "id": "vmo_squats", "scheme": "3×15–20, 30–35 lbs" },
+          { "id": "groin_lunges", "scheme": "" },
+          { "id": "hip_rotations", "scheme": "10 reps" },
+          { "id": "dead_hangs", "scheme": "30–60 sec" },
+          { "id": "nordic_curls", "scheme": "" },
+          { "id": "pistol_squats", "scheme": "" },
+          { "id": "burpees", "scheme": "Conditioning" }
+        ]
+      }
+    ]
+  }
+]

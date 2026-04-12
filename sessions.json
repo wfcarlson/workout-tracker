@@ -1,0 +1,481 @@
+[
+  {
+    "date": "2025-08-07",
+    "workoutId": "legs",
+    "exerciseOrder": ["tib_raises", "calf_raises_bent", "jefferson_curls", "heavy_squat"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}],
+      "calf_raises_bent": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}],
+      "jefferson_curls": [{"weight": 55, "reps": 10}, {"weight": 55, "reps": 10}, {"weight": 55, "reps": 10}, {"weight": 55, "reps": 10}],
+      "heavy_squat": [{"weight": 275, "reps": 6}, {"weight": 275, "reps": 7}, {"weight": 285, "reps": 7}]
+    }
+  },
+  {
+    "date": "2025-08-10",
+    "workoutId": "chest_arms",
+    "duration": 3895,
+    "exerciseOrder": ["flat_bench", "pullups_bw", "dips_bw", "machine_press", "preacher_curls", "skull_crushers", "lat_stretch_chest"],
+    "log": {
+      "flat_bench": [{"weight": 235, "reps": 7}, {"weight": 235, "reps": 7}, {"weight": 235, "reps": 6}],
+      "pullups_bw": [{"weight": 0, "reps": 7}, {"weight": 0, "reps": 6}, {"weight": 0, "reps": 5}],
+      "dips_bw": [{"weight": 0, "reps": 8}, {"weight": 0, "reps": 6}, {"weight": 0, "reps": 4}],
+      "machine_press": [{"weight": 110, "reps": 8}, {"weight": 110, "reps": 8}, {"weight": 110, "reps": 8}, {"weight": 110, "reps": 6}],
+      "preacher_curls": [{"weight": 30, "reps": 13}, {"weight": 30, "reps": 11}, {"weight": 30, "reps": 10}],
+      "skull_crushers": [{"weight": 30, "reps": 9}, {"weight": 30, "reps": 10}, {"weight": 30, "reps": 8}],
+      "lat_stretch_chest": [{"weight": 35, "reps": 9}, {"weight": 35, "reps": 8}, {"weight": 35, "reps": 7}]
+    }
+  },
+  {
+    "date": "2025-08-14",
+    "workoutId": "legs",
+    "exerciseOrder": ["tib_raises", "calf_raises_bent", "jefferson_curls", "ql_curls", "atg_lunges", "heavy_squat", "piriformis", "hip_hinges", "vmo_squats"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}],
+      "calf_raises_bent": [{"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}],
+      "jefferson_curls": [{"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}],
+      "ql_curls": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}],
+      "atg_lunges": [{"weight": 0, "reps": 5}, {"weight": 0, "reps": 5}, {"weight": 0, "reps": 5}, {"weight": 0, "reps": 5}],
+      "heavy_squat": [{"weight": 285, "reps": 7}, {"weight": 285, "reps": 8}, {"weight": 295, "reps": 8}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "hip_hinges": [{"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}],
+      "vmo_squats": [{"weight": 30, "reps": 17}, {"weight": 30, "reps": 17}, {"weight": 30, "reps": 17}]
+    }
+  },
+  {
+    "date": "2025-08-20",
+    "workoutId": "chest_arms",
+    "duration": 4260,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "dips_bw", "db_incline", "preacher_curls", "lat_stretch_chest", "skull_crushers"],
+    "log": {
+      "flat_bench": [{"weight": 235, "reps": 8}, {"weight": 235, "reps": 8}, {"weight": 235, "reps": 7}],
+      "rotator_cuff": [{"weight": 15, "reps": 15}, {"weight": 15, "reps": 15}, {"weight": 15, "reps": 15}],
+      "wpullups": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}, {"weight": 25, "reps": 2}],
+      "dips_bw": [{"weight": 0, "reps": 4}, {"weight": 0, "reps": 5}, {"weight": 0, "reps": 3}, {"weight": 0, "reps": 12}],
+      "db_incline": [{"weight": 50, "reps": 8}, {"weight": 50, "reps": 9}, {"weight": 50, "reps": 9}],
+      "preacher_curls": [{"weight": 30, "reps": 12}, {"weight": 30, "reps": 8}, {"weight": 30, "reps": 10}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 9}, {"weight": 30, "reps": 8}],
+      "skull_crushers": [{"weight": 30, "reps": 10}, {"weight": 30, "reps": 8}]
+    }
+  },
+  {
+    "date": "2025-09-10",
+    "workoutId": "chest_arms",
+    "duration": 3600,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "db_incline", "preacher_curls", "lat_stretch_chest", "skull_crushers"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 6}, {"weight": 245, "reps": 6}, {"weight": 245, "reps": 4}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "wpullups": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 4}],
+      "wdips": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 7}, {"weight": 25, "reps": 5}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}, {"weight": 50, "reps": 7}],
+      "preacher_curls": [{"weight": 35, "reps": 8}, {"weight": 35, "reps": 6}, {"weight": 35, "reps": 5}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 11}],
+      "skull_crushers": [{"weight": 30, "reps": 8}]
+    }
+  },
+  {
+    "date": "2025-09-18",
+    "workoutId": "chest_arms",
+    "duration": 3940,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "bb_incline_bench", "bb_curls", "lat_stretch_chest", "skull_crushers"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 6}, {"weight": 245, "reps": 6}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "wpullups": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 7}, {"weight": 25, "reps": 5}],
+      "wdips": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}],
+      "bb_incline_bench": [{"weight": 115, "reps": 6}, {"weight": 115, "reps": 8}, {"weight": 115, "reps": 8}],
+      "bb_curls": [{"weight": 65, "reps": 8}, {"weight": 65, "reps": 8}, {"weight": 65, "reps": 8}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 8}, {"weight": 30, "reps": 8}, {"weight": 30, "reps": 8}],
+      "skull_crushers": [{"weight": 30, "reps": 12}, {"weight": 30, "reps": 12}, {"weight": 30, "reps": 12}]
+    }
+  },
+  {
+    "date": "2025-09-24",
+    "workoutId": "chest_arms",
+    "duration": 4320,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "db_incline", "preacher_curls", "lat_stretch_chest", "skull_crushers"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 6}, {"weight": 245, "reps": 6}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "wpullups": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 7}, {"weight": 25, "reps": 5}],
+      "wdips": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 7}, {"weight": 25, "reps": 7}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}, {"weight": 50, "reps": 8}],
+      "preacher_curls": [{"weight": 35, "reps": 9}, {"weight": 35, "reps": 7}, {"weight": 35, "reps": 7}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 8}, {"weight": 30, "reps": 8}],
+      "skull_crushers": [{"weight": 30, "reps": 12}, {"weight": 30, "reps": 10}]
+    }
+  },
+  {
+    "date": "2025-09-26",
+    "workoutId": "legs",
+    "duration": 3896,
+    "exerciseOrder": ["tib_raises", "calf_raises_straight", "jefferson_curls", "heavy_squat", "piriformis", "hip_rotations", "hip_hinges"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}],
+      "calf_raises_straight": [{"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}],
+      "jefferson_curls": [{"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}],
+      "heavy_squat": [{"weight": 295, "reps": 6}, {"weight": 295, "reps": 7}, {"weight": 295, "reps": 2}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "hip_rotations": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}],
+      "hip_hinges": [{"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}]
+    }
+  },
+  {
+    "date": "2025-10-29",
+    "workoutId": "chest_arms",
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "pullups_bw", "dips_bw", "db_incline"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 4}, {"weight": 245, "reps": 4}, {"weight": 245, "reps": 3}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "pullups_bw": [{"weight": 0, "reps": 9}, {"weight": 0, "reps": 6}, {"weight": 0, "reps": 7}, {"weight": 0, "reps": 6}],
+      "dips_bw": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 6}, {"weight": 0, "reps": 6}, {"weight": 0, "reps": 3}],
+      "db_incline": [{"weight": 0, "reps": 7}, {"weight": 0, "reps": 4}, {"weight": 0, "reps": 5}]
+    }
+  },
+  {
+    "date": "2025-11-06",
+    "workoutId": "chest_arms",
+    "duration": 3484,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "db_incline", "preacher_curls", "lat_stretch_chest"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 6}, {"weight": 245, "reps": 4}, {"weight": 245, "reps": 5}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "wpullups": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}, {"weight": 0, "reps": 5}],
+      "wdips": [{"weight": 25, "reps": 5}, {"weight": 25, "reps": 5}, {"weight": 25, "reps": 5}, {"weight": 0, "reps": 4}],
+      "db_incline": [{"weight": 50, "reps": 8}, {"weight": 50, "reps": 10}, {"weight": 50, "reps": 8}],
+      "preacher_curls": [{"weight": 35, "reps": 7}, {"weight": 35, "reps": 6}, {"weight": 35, "reps": 4}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 10}, {"weight": 30, "reps": 10}]
+    }
+  },
+  {
+    "date": "2025-11-09",
+    "workoutId": "legs",
+    "duration": 1980,
+    "exerciseOrder": ["tib_raises", "calf_raises_straight", "jefferson_curls", "heavy_squat"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}],
+      "calf_raises_straight": [{"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}],
+      "jefferson_curls": [{"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}],
+      "heavy_squat": [{"weight": 275, "reps": 6}, {"weight": 285, "reps": 5}]
+    }
+  },
+  {
+    "date": "2025-11-11",
+    "workoutId": "chest_arms",
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "dips_bw"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 6}, {"weight": 245, "reps": 4}, {"weight": 245, "reps": 5}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "dips_bw": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 7}]
+    }
+  },
+  {
+    "date": "2025-11-17",
+    "workoutId": "legs",
+    "duration": 3000,
+    "exerciseOrder": ["tib_raises", "calf_raises_straight", "jefferson_curls", "heavy_squat", "piriformis", "hip_hinges", "atg_lunges"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}],
+      "calf_raises_straight": [{"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}],
+      "jefferson_curls": [{"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}],
+      "heavy_squat": [{"weight": 285, "reps": 7}, {"weight": 285, "reps": 7}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "hip_hinges": [{"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}],
+      "atg_lunges": [{"weight": 45, "reps": 5}, {"weight": 45, "reps": 5}]
+    }
+  },
+  {
+    "date": "2025-11-21",
+    "workoutId": "chest_arms",
+    "duration": 3465,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "db_incline", "preacher_curls", "lat_stretch_chest", "skull_crushers"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 6}, {"weight": 245, "reps": 5}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "wpullups": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 3}, {"weight": 0, "reps": 7}],
+      "wdips": [{"weight": 25, "reps": 5}, {"weight": 25, "reps": 5}, {"weight": 25, "reps": 4}, {"weight": 0, "reps": 4}],
+      "db_incline": [{"weight": 50, "reps": 9}, {"weight": 50, "reps": 8}],
+      "preacher_curls": [{"weight": 30, "reps": 10}, {"weight": 30, "reps": 8}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 8}, {"weight": 30, "reps": 8}],
+      "skull_crushers": [{"weight": 30, "reps": 12}, {"weight": 30, "reps": 10}]
+    }
+  },
+  {
+    "date": "2025-11-26",
+    "workoutId": "legs",
+    "duration": 3560,
+    "exerciseOrder": ["tib_raises", "calf_raises_straight", "calf_raises_bent", "jefferson_curls", "heavy_squat", "piriformis", "hip_hinges", "atg_lunges"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}, {"weight": 0, "reps": 18}],
+      "calf_raises_straight": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "calf_raises_bent": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "jefferson_curls": [{"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}],
+      "heavy_squat": [{"weight": 285, "reps": 9}, {"weight": 300, "reps": 5}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "hip_hinges": [{"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}],
+      "atg_lunges": [{"weight": 45, "reps": 5}, {"weight": 45, "reps": 5}, {"weight": 45, "reps": 5}]
+    }
+  },
+  {
+    "date": "2025-11-28",
+    "workoutId": "chest_arms",
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "db_incline", "preacher_curls"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 6}],
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}],
+      "preacher_curls": [{"weight": 30, "reps": 8}, {"weight": 30, "reps": 8}]
+    }
+  },
+  {
+    "date": "2025-11-30",
+    "workoutId": "legs",
+    "duration": 3235,
+    "exerciseOrder": ["tib_raises", "calf_raises_straight", "jefferson_curls", "heavy_squat", "vmo_squats", "piriformis", "groin_lunges", "hip_flexor_raises"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 22}, {"weight": 0, "reps": 22}, {"weight": 0, "reps": 22}],
+      "calf_raises_straight": [{"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}],
+      "jefferson_curls": [{"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}, {"weight": 65, "reps": 10}],
+      "heavy_squat": [{"weight": 300, "reps": 6}, {"weight": 305, "reps": 3}],
+      "vmo_squats": [{"weight": 30, "reps": 20}, {"weight": 30, "reps": 20}, {"weight": 30, "reps": 20}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "groin_lunges": [{"weight": 0, "reps": 8}, {"weight": 0, "reps": 8}, {"weight": 0, "reps": 8}],
+      "hip_flexor_raises": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}]
+    }
+  },
+  {
+    "date": "2025-12-05",
+    "workoutId": "chest_arms",
+    "duration": 2400,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "db_incline", "preacher_curls"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 6}, {"weight": 245, "reps": 4}],
+      "rotator_cuff": [{"weight": 20, "reps": 15}, {"weight": 20, "reps": 15}, {"weight": 20, "reps": 15}],
+      "wpullups": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}, {"weight": 25, "reps": 4}],
+      "wdips": [{"weight": 25, "reps": 5}, {"weight": 25, "reps": 5}, {"weight": 25, "reps": 4}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}],
+      "preacher_curls": [{"weight": 30, "reps": 10}, {"weight": 30, "reps": 10}, {"weight": 30, "reps": 8}]
+    }
+  },
+  {
+    "date": "2025-12-10",
+    "workoutId": "legs",
+    "duration": 3390,
+    "exerciseOrder": ["tib_raises", "calf_raises_straight", "zercher_dl", "heavy_squat", "piriformis", "ql_curls", "groin_stretch", "split_squats"],
+    "log": {
+      "tib_raises": [{"weight": 0, "reps": 22}, {"weight": 0, "reps": 22}, {"weight": 0, "reps": 22}],
+      "calf_raises_straight": [{"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}],
+      "zercher_dl": [{"weight": 65, "reps": 10}, {"weight": 75, "reps": 10}, {"weight": 85, "reps": 10}],
+      "heavy_squat": [{"weight": 305, "reps": 7}, {"weight": 305, "reps": 5}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "ql_curls": [{"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}, {"weight": 20, "reps": 10}],
+      "groin_stretch": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}],
+      "split_squats": [{"weight": 55, "reps": 6}, {"weight": 55, "reps": 6}, {"weight": 55, "reps": 6}]
+    }
+  },
+  {
+    "date": "2025-12-12",
+    "workoutId": "chest_arms",
+    "duration": 3234,
+    "exerciseOrder": ["flat_bench", "rotator_cuff", "wpullups", "wdips", "db_incline", "preacher_curls"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 6}],
+      "rotator_cuff": [{"weight": 20, "reps": 15}, {"weight": 20, "reps": 15}, {"weight": 20, "reps": 15}],
+      "wpullups": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 4}],
+      "wdips": [{"weight": 25, "reps": 5}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 4}],
+      "db_incline": [{"weight": 50, "reps": 9}, {"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}],
+      "preacher_curls": [{"weight": 30, "reps": 10}, {"weight": 30, "reps": 10}, {"weight": 30, "reps": 8}]
+    }
+  },
+  {
+    "date": "2025-12-19",
+    "workoutId": "chest_arms",
+    "duration": 3583,
+    "exerciseOrder": ["flat_bench", "pullups_bw", "dips_bw", "db_incline", "preacher_curls"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 6}],
+      "pullups_bw": [{"weight": 0, "reps": 11}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 9}],
+      "dips_bw": [{"weight": 0, "reps": 9}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 10}],
+      "preacher_curls": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 6}]
+    }
+  },
+  {
+    "date": "2025-12-20",
+    "workoutId": "legs",
+    "exerciseOrder": ["burpees", "atg_lunges"],
+    "log": {
+      "burpees": [{"weight": 0, "reps": 20}, {"weight": 0, "reps": 20}, {"weight": 0, "reps": 20}, {"weight": 0, "reps": 20}],
+      "atg_lunges": [{"weight": 75, "reps": 5}, {"weight": 75, "reps": 5}]
+    }
+  },
+  {
+    "date": "2026-01-16",
+    "workoutId": "chest_arms",
+    "exerciseOrder": ["flat_bench"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 8}]
+    }
+  },
+  {
+    "date": "2026-01-27",
+    "workoutId": "legs",
+    "exerciseOrder": ["groin_lunges", "atg_lunges", "piriformis", "zercher_dl", "burpees", "heavy_squat"],
+    "log": {
+      "groin_lunges": [{"weight": 20, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}],
+      "atg_lunges": [{"weight": 40, "reps": 6}, {"weight": 40, "reps": 6}, {"weight": 40, "reps": 6}, {"weight": 40, "reps": 6}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "zercher_dl": [{"weight": 90, "reps": 8}, {"weight": 100, "reps": 8}, {"weight": 100, "reps": 8}, {"weight": 100, "reps": 8}],
+      "burpees": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}],
+      "heavy_squat": [{"weight": 135, "reps": 5}, {"weight": 185, "reps": 5}, {"weight": 225, "reps": 5}, {"weight": 265, "reps": 1}]
+    }
+  },
+  {
+    "date": "2026-02-05",
+    "workoutId": "chest_arms",
+    "exerciseOrder": ["flat_bench"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 8}, {"weight": 245, "reps": 8}]
+    }
+  },
+  {
+    "date": "2026-02-09",
+    "workoutId": "legs",
+    "exerciseOrder": ["soleus_raises", "calf_raises_bent", "calf_raises_straight", "zercher_dl", "atg_lunges", "heavy_squat"],
+    "log": {
+      "soleus_raises": [{"weight": 0, "reps": 20}, {"weight": 0, "reps": 20}, {"weight": 0, "reps": 20}],
+      "calf_raises_bent": [{"weight": 20, "reps": 8}, {"weight": 20, "reps": 8}, {"weight": 20, "reps": 8}],
+      "calf_raises_straight": [{"weight": 20, "reps": 8}, {"weight": 20, "reps": 8}, {"weight": 20, "reps": 8}],
+      "zercher_dl": [{"weight": 95, "reps": 10}, {"weight": 95, "reps": 10}, {"weight": 95, "reps": 10}],
+      "atg_lunges": [{"weight": 65, "reps": 7}, {"weight": 65, "reps": 7}, {"weight": 65, "reps": 7}],
+      "heavy_squat": [{"weight": 135, "reps": 3}, {"weight": 185, "reps": 3}, {"weight": 235, "reps": 5}, {"weight": 255, "reps": 5}, {"weight": 275, "reps": 2}]
+    }
+  },
+  {
+    "date": "2026-03-11",
+    "workoutId": "legs",
+    "exerciseOrder": ["calf_raises_bent", "calf_raises_straight", "tib_raises", "zercher_dl", "atg_lunges", "heavy_squat"],
+    "log": {
+      "calf_raises_bent": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "calf_raises_straight": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "tib_raises": [{"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}],
+      "zercher_dl": [{"weight": 115, "reps": 8}, {"weight": 125, "reps": 8}, {"weight": 135, "reps": 8}],
+      "atg_lunges": [{"weight": 65, "reps": 6}, {"weight": 65, "reps": 6}, {"weight": 65, "reps": 6}],
+      "heavy_squat": [{"weight": 135, "reps": 5}, {"weight": 225, "reps": 3}, {"weight": 255, "reps": 5}, {"weight": 255, "reps": 5}]
+    }
+  },
+  {
+    "date": "2026-03-16",
+    "workoutId": "legs",
+    "exerciseOrder": ["calf_raises_bent", "calf_raises_straight", "tib_raises", "zercher_dl", "atg_lunges", "groin_lunges", "heavy_squat"],
+    "log": {
+      "calf_raises_bent": [{"weight": 18.5, "reps": 8}, {"weight": 18.5, "reps": 8}, {"weight": 18.5, "reps": 8}],
+      "calf_raises_straight": [{"weight": 18.5, "reps": 8}, {"weight": 18.5, "reps": 8}, {"weight": 18.5, "reps": 8}],
+      "tib_raises": [{"weight": 18.5, "reps": 10}, {"weight": 18.5, "reps": 10}, {"weight": 18.5, "reps": 10}],
+      "zercher_dl": [{"weight": 135, "reps": 8}, {"weight": 135, "reps": 8}, {"weight": 135, "reps": 8}],
+      "atg_lunges": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 6}],
+      "groin_lunges": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}],
+      "heavy_squat": [{"weight": 135, "reps": 3}, {"weight": 225, "reps": 3}, {"weight": 255, "reps": 6}, {"weight": 255, "reps": 5}]
+    }
+  },
+  {
+    "date": "2026-03-22",
+    "workoutId": "chest_arms",
+    "duration": 3600,
+    "exerciseOrder": ["flat_bench", "wpullups", "wdips", "db_incline", "preacher_curls", "skull_crushers", "lat_stretch_chest"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 8}, {"weight": 245, "reps": 7}],
+      "wpullups": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}],
+      "wdips": [{"weight": 25, "reps": 5}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}],
+      "db_incline": [{"weight": 50, "reps": 9}, {"weight": 50, "reps": 8}, {"weight": 50, "reps": 10}],
+      "preacher_curls": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 7}, {"weight": 25, "reps": 6}],
+      "skull_crushers": [{"weight": 30, "reps": 6}, {"weight": 30, "reps": 5}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 5}, {"weight": 30, "reps": 5}]
+    }
+  },
+  {
+    "date": "2026-03-27",
+    "workoutId": "legs",
+    "exerciseOrder": ["zercher_dl", "atg_lunges", "groin_lunges", "heavy_squat", "piriformis", "ql_curls", "hip_flexor_raises"],
+    "log": {
+      "zercher_dl": [{"weight": 135, "reps": 8}, {"weight": 135, "reps": 8}, {"weight": 135, "reps": 8}],
+      "atg_lunges": [{"weight": 65, "reps": 6}, {"weight": 65, "reps": 6}, {"weight": 65, "reps": 6}],
+      "groin_lunges": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}],
+      "heavy_squat": [{"weight": 135, "reps": 5}, {"weight": 225, "reps": 2}, {"weight": 255, "reps": 6}, {"weight": 265, "reps": 2}],
+      "piriformis": [{"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}, {"weight": 0, "reps": 12}],
+      "ql_curls": [{"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}],
+      "hip_flexor_raises": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}]
+    }
+  },
+  {
+    "date": "2026-04-01",
+    "workoutId": "legs",
+    "exerciseOrder": ["calf_raises_bent", "calf_raises_straight", "tib_raises", "zercher_dl", "atg_lunges", "heavy_squat"],
+    "log": {
+      "calf_raises_bent": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "calf_raises_straight": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "tib_raises": [{"weight": 15, "reps": 12}, {"weight": 15, "reps": 12}, {"weight": 15, "reps": 12}],
+      "zercher_dl": [{"weight": 145, "reps": 8}, {"weight": 145, "reps": 8}, {"weight": 145, "reps": 6}],
+      "atg_lunges": [{"weight": 65, "reps": 8}, {"weight": 65, "reps": 8}, {"weight": 65, "reps": 8}],
+      "heavy_squat": [{"weight": 135, "reps": 5}, {"weight": 225, "reps": 3}, {"weight": 265, "reps": 3}, {"weight": 265, "reps": 5}, {"weight": 285, "reps": 2}]
+    }
+  },
+  {
+    "date": "2026-04-02",
+    "workoutId": "chest_arms",
+    "duration": 2880,
+    "exerciseOrder": ["flat_bench", "wpullups", "wdips", "db_incline", "preacher_curls", "skull_crushers", "lat_stretch_chest"],
+    "log": {
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 6}],
+      "wpullups": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}],
+      "wdips": [{"weight": 25, "reps": 5}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 9}, {"weight": 50, "reps": 8}],
+      "preacher_curls": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 5}],
+      "skull_crushers": [{"weight": 30, "reps": 5}, {"weight": 30, "reps": 7}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 5}, {"weight": 30, "reps": 3}]
+    }
+  },
+  {
+    "date": "2026-04-08",
+    "workoutId": "legs",
+    "exerciseOrder": ["calf_raises_bent", "calf_raises_straight", "tib_raises", "jefferson_curls", "hip_flexor_raises", "heavy_squat"],
+    "log": {
+      "calf_raises_bent": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "calf_raises_straight": [{"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}, {"weight": 15, "reps": 8}],
+      "tib_raises": [{"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}, {"weight": 15, "reps": 10}],
+      "jefferson_curls": [{"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}, {"weight": 45, "reps": 10}],
+      "hip_flexor_raises": [{"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}, {"weight": 0, "reps": 10}],
+      "heavy_squat": [{"weight": 135, "reps": 5}, {"weight": 225, "reps": 2}, {"weight": 275, "reps": 5}, {"weight": 275, "reps": 6}, {"weight": 295, "reps": 1}]
+    }
+  },
+  {
+    "date": "2026-04-10",
+    "workoutId": "chest_arms",
+    "duration": 2880,
+    "exerciseOrder": ["rotator_cuff", "zottman_curls", "flat_bench", "wpullups", "wdips", "db_incline", "preacher_curls", "skull_crushers", "lat_stretch_chest"],
+    "log": {
+      "rotator_cuff": [{"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}, {"weight": 20, "reps": 12}],
+      "zottman_curls": [{"weight": 20, "reps": 5}, {"weight": 20, "reps": 5}, {"weight": 20, "reps": 5}],
+      "flat_bench": [{"weight": 245, "reps": 7}, {"weight": 245, "reps": 5}, {"weight": 265, "reps": 2}],
+      "wpullups": [{"weight": 25, "reps": 7}, {"weight": 25, "reps": 6}, {"weight": 25, "reps": 3}],
+      "wdips": [{"weight": 25, "reps": 6}, {"weight": 25, "reps": 5}, {"weight": 25, "reps": 6}],
+      "db_incline": [{"weight": 50, "reps": 10}, {"weight": 50, "reps": 9}, {"weight": 50, "reps": 8}],
+      "preacher_curls": [{"weight": 25, "reps": 8}, {"weight": 25, "reps": 8}, {"weight": 25, "reps": 5}],
+      "skull_crushers": [{"weight": 30, "reps": 7}, {"weight": 30, "reps": 8}, {"weight": 30, "reps": 8}],
+      "lat_stretch_chest": [{"weight": 30, "reps": 6}, {"weight": 30, "reps": 6}, {"weight": 30, "reps": 6}]
+    }
+  },
+  {
+    "date": "2026-04-11",
+    "workoutId": "shoulders_back_arms",
+    "exerciseOrder": ["ohp", "pullups_bw", "hammer_curls", "ez_curls", "shoulder_raises", "forearm_circuit"],
+    "log": {
+      "ohp": [{"weight": 135, "reps": 8}, {"weight": 155, "reps": 4}, {"weight": 155, "reps": 3}],
+      "pullups_bw": [{"weight": 0, "reps": 15}, {"weight": 0, "reps": 8}, {"weight": 0, "reps": 9}],
+      "hammer_curls": [{"weight": 20, "reps": 16}, {"weight": 20, "reps": 15}, {"weight": 20, "reps": 13}],
+      "ez_curls": [{"weight": 60, "reps": 7}, {"weight": 60, "reps": 7}, {"weight": 60, "reps": 7}],
+      "shoulder_raises": [{"weight": 18.5, "reps": 12}, {"weight": 18.5, "reps": 9}, {"weight": 18.5, "reps": 8}],
+      "forearm_circuit": [{"weight": 0, "reps": 0}]
+    }
+  }
+]
