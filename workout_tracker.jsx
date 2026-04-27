@@ -111,6 +111,7 @@ const FREE_WORKOUT = { id: "free", name: "Free Workout", icon: "📋", groups: [
 // ─── Storage ───────────────────────────────────────────────────────
 const UPSTASH_URL = import.meta.env.VITE_UPSTASH_URL;
 const UPSTASH_TOKEN = import.meta.env.VITE_UPSTASH_TOKEN;
+const KEY_PREFIX = import.meta.env.DEV ? "dev-" : "";
 
 async function loadData(key, fallback) {
   try {
@@ -177,24 +178,7 @@ const S = {
 };
 
 // ─── Components ────────────────────────────────────────────────────
-function Timer({ startTime }) {
-  const [elapsed, setElapsed] = useState(0);
-  useEffect(() => {
-    if (!startTime) return;
-    const iv = setInterval(() => setElapsed(Math.floor((Date.now() - startTime) / 1000)), 1000);
-    return () => clearInterval(iv);
-  }, [startTime]);
-  if (!startTime) return null;
-  return (
-    <div style={{ position: "sticky", top: 0, zIndex: 10, background: "#1a1a14ee", backdropFilter: "blur(8px)", borderBottom: "1px solid #2a2a24", padding: "10px 0", display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
-      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#6a8a4a", animation: "pulse 2s infinite" }} />
-      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 20, color: "#c8c4b8", fontWeight: 600 }}>{fmtTime(elapsed)}</span>
-      <style>{`@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>
-    </div>
-  );
-}
-
-function InlineTimer({ startTime }) {
+function Timer({ startTime, lapAt, onClick }) {
   const [elapsed, setElapsed] = useState(() => startTime ? Math.floor((Date.now() - startTime) / 1000) : 0);
   useEffect(() => {
     if (!startTime) return;
@@ -202,13 +186,59 @@ function InlineTimer({ startTime }) {
     return () => clearInterval(iv);
   }, [startTime]);
   if (!startTime) return null;
-  return <span style={{ fontFamily: "'JetBrains Mono', monospace" }}>{fmtTime(elapsed)}</span>;
+  const lapSecs = lapAt ? Math.floor((Date.now() - lapAt) / 1000) : null;
+  return (
+    <div onClick={onClick} style={{ padding: "10px 0", display: "flex", alignItems: "center", cursor: "pointer", userSelect: "none" }}>
+      <div style={{ flex: 1 }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#8ab86a", flexShrink: 0, animation: "pulse 2s infinite" }} />
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 26, color: "#e8e4d8", fontWeight: 700 }}>{fmtTime(elapsed)}</span>
+      </div>
+      <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+        {lapAt
+          ? <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: "#8ab86a", paddingRight: 4 }}>↺ {fmtTime(lapSecs)}</span>
+          : <span style={{ fontSize: 13, color: "#3a4a2a", paddingRight: 4 }}>tap to lap</span>}
+      </div>
+      <style>{`@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>
+    </div>
+  );
 }
 
-function ChoicePicker({ choices, chosen, onChoose, label }) {
+function InlineTimer({ startTime, lapAt }) {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!startTime) return;
+    const iv = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(iv);
+  }, [startTime]);
+  if (!startTime) return null;
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const lapSecs = lapAt ? Math.floor((Date.now() - lapAt) / 1000) : null;
+  return (
+    <div style={{ textAlign: "right" }}>
+      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 28, fontWeight: 700, color: "#a8c888", lineHeight: 1.2 }}>{fmtTime(elapsed)}</div>
+      {lapSecs !== null && <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#6a8a4a", lineHeight: 1.2 }}>lap {fmtTime(lapSecs)}</div>}
+    </div>
+  );
+}
+
+function ChoicePicker({ choices, chosen, onChoose, onHide, label, customExercises }) {
+  const [pickingOther, setPickingOther] = useState(false);
+  const [otherQuery, setOtherQuery] = useState("");
+  const allEx = [...ALL_EXERCISES, ...(customExercises || [])];
+  const choiceIds = new Set(choices.map(c => c.id));
+  const otherResults = otherQuery.length > 0
+    ? allEx.filter(e => !choiceIds.has(e.id) && e.name.toLowerCase().includes(otherQuery.toLowerCase())).slice(0, 5)
+    : [];
   return (
     <div style={{ marginBottom: 8 }}>
-      {label && <div style={{ ...S.tag, marginBottom: 4, fontSize: 10 }}>{label}</div>}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+        {label && <div style={{ ...S.tag, marginBottom: 0, fontSize: 10 }}>{label}</div>}
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <button onClick={() => { setPickingOther(p => !p); setOtherQuery(""); }} title="Choose a different exercise" style={{ background: "none", border: "none", color: "#5a7a4a", fontSize: 18, cursor: "pointer", padding: "0 2px", lineHeight: 1 }}>+</button>
+          {onHide && <button onClick={onHide} title="Skip this group" style={{ background: "none", border: "none", color: "#5a5a4a", fontSize: 16, cursor: "pointer", padding: "0 2px", lineHeight: 1 }}>×</button>}
+        </div>
+      </div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
         {choices.map(c => {
           const ex = getExercise(c.id);
@@ -217,6 +247,23 @@ function ChoicePicker({ choices, chosen, onChoose, label }) {
           );
         })}
       </div>
+      {pickingOther && (
+        <div style={{ marginTop: 6 }}>
+          <input
+            autoFocus
+            placeholder="Search all exercises…"
+            value={otherQuery}
+            onChange={e => setOtherQuery(e.target.value)}
+            style={{ ...S.input, width: "100%", marginBottom: 4 }}
+          />
+          {otherResults.map(e => (
+            <button key={e.id} onClick={() => { onChoose(e.id); setPickingOther(false); setOtherQuery(""); }}
+              style={{ display: "block", width: "100%", textAlign: "left", background: "none", border: "none", borderBottom: "1px solid #2a2a24", color: "#c8c4b8", padding: "7px 4px", fontSize: 13, cursor: "pointer" }}>
+              {e.name}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -244,9 +291,9 @@ function SetLogger({ exerciseId, exercise, session, setSession }) {
       {logged.map((s, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <span style={{ color: "#8a8a7a", fontSize: 12, width: 18, flexShrink: 0 }}>S{i + 1}</span>
-          <input type="number" inputMode="decimal" value={s.weight} onChange={e => updateSet(i, "weight", e.target.value)} style={{ ...S.input, width: 64 }} />
+          <input type="number" inputMode="decimal" value={s.weight} onChange={e => updateSet(i, "weight", e.target.value)} onFocus={e => e.target.select()} style={{ ...S.input, width: 64 }} />
           <span style={{ color: "#6a6a5a", fontSize: 13 }}>×</span>
-          <input type="number" inputMode="numeric" value={s.reps} onChange={e => updateSet(i, "reps", e.target.value)} style={{ ...S.input, width: 52 }} />
+          <input type="number" inputMode="numeric" value={s.reps} onChange={e => updateSet(i, "reps", e.target.value)} onFocus={e => e.target.select()} style={{ ...S.input, width: 52 }} />
           <button onClick={() => removeSet(i)} style={{ background: "none", border: "none", color: "#6a4a4a", fontSize: 16, cursor: "pointer", padding: "2px 6px" }}>×</button>
         </div>
       ))}
@@ -623,7 +670,7 @@ function PlanListView({ workouts, onBack, onEdit, onNew, onDelete }) {
 }
 
 // ─── Workout View ──────────────────────────────────────────────────
-function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExercises, setCustomExercises }) {
+function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExercises, setCustomExercises, initialLapAt }) {
   const existing = sessions.find(s => s.date === todayStr() && s.workoutId === workout.id);
   const initSession = (() => {
     let raw;
@@ -636,24 +683,76 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
     } catch {}
     if (!raw) raw = existing || null;
     const s = raw
-      ? { choices: {}, hiddenExercises: [], ...raw }
-      : { date: todayStr(), workoutId: workout.id, log: {}, exerciseOrder: [], choices: {}, hiddenExercises: [], startTime: null, duration: null };
-    if (!s.addedItems) s.addedItems = (s.addedExercises || []).map(id => ({ type: "single", id }));
+      ? { choices: {}, hiddenExercises: [], hiddenChoices: [], ...raw }
+      : { date: todayStr(), workoutId: workout.id, log: {}, exerciseOrder: [], choices: {}, hiddenExercises: [], hiddenChoices: [], startTime: null, duration: null };
+    if (!s.addedItems) {
+      s.addedItems = (s.addedExercises || []).map((id, i) => ({ type: "single", id, itemId: `m${i}` }));
+    } else {
+      s.addedItems = s.addedItems.map((item, i) => item.itemId ? item : { ...item, itemId: `m${i}` });
+    }
+    if (!s.slots) {
+      s.slots = [
+        ...workout.groups.map((_, gi) => ({ type: "plan", gi })),
+        ...s.addedItems.map(item => ({ type: "added", itemId: item.itemId })),
+      ];
+    }
     return s;
   })();
   const [session, setSession] = useState(initSession);
   const [timerStart, setTimerStart] = useState(initSession.startTime && !initSession.duration ? initSession.startTime : null);
   const [showExport, setShowExport] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
+  const [lapAt, setLapAt] = useState(initialLapAt);
+  const [dragActive, setDragActive] = useState(null);
+  const dragRef = useRef({ active: null, timer: null, lastIdx: null });
+  const isTouch = useRef(typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches).current;
 
   const totalSets = Object.values(session.log).reduce((a, s) => a + s.length, 0);
   const started = !!timerStart;
 
   useEffect(() => {
     if (timerStart) {
-      localStorage.setItem("wip", JSON.stringify({ session, workout }));
+      localStorage.setItem("wip", JSON.stringify({ session, workout, lapAt }));
     }
-  }, [session, timerStart]);
+  }, [session, timerStart, lapAt]);
+
+  useEffect(() => {
+    if (!isTouch) return;
+    const onMove = (e) => {
+      const dr = dragRef.current;
+      if (dr.active === null) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      const slotEl = el?.closest('[data-slot-idx]');
+      if (!slotEl) return;
+      const toIdx = parseInt(slotEl.dataset.slotIdx, 10);
+      if (isNaN(toIdx) || toIdx === dr.lastIdx) return;
+      dr.lastIdx = toIdx;
+      const fromIdx = dr.active;
+      dr.active = toIdx;
+      setDragActive(toIdx);
+      setSession(s => {
+        const slots = [...s.slots];
+        slots.splice(toIdx, 0, slots.splice(fromIdx, 1)[0]);
+        return { ...s, slots };
+      });
+    };
+    const onEnd = () => {
+      clearTimeout(dragRef.current.timer);
+      dragRef.current.active = null;
+      dragRef.current.lastIdx = null;
+      setDragActive(null);
+    };
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+    document.addEventListener('touchcancel', onEnd);
+    return () => {
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onEnd);
+      document.removeEventListener('touchcancel', onEnd);
+    };
+  }, [isTouch]);
 
   const handleStart = () => {
     const now = Date.now();
@@ -666,45 +765,70 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
     setShowFinishModal(true);
   };
 
-  const setChoice = (key, exId) => setSession(s => ({ ...s, choices: { ...s.choices, [key]: exId } }));
+  const setChoice = (key, exId) => setSession(s => ({
+    ...s, choices: { ...s.choices, [key]: s.choices[key] === exId ? null : exId },
+  }));
+
+  const hideChoiceGroup = (key) => setSession(s => ({
+    ...s,
+    hiddenChoices: [...(s.hiddenChoices || []), key],
+    choices: { ...s.choices, [key]: null },
+  }));
+
+  const reorderSlots = (fromIdx, toIdx) => {
+    setSession(s => {
+      const slots = [...s.slots];
+      slots.splice(toIdx, 0, slots.splice(fromIdx, 1)[0]);
+      return { ...s, slots };
+    });
+  };
+
+  const startLongPress = (slotIdx, e) => {
+    e.stopPropagation();
+    const timer = setTimeout(() => {
+      navigator.vibrate?.(50);
+      dragRef.current.active = slotIdx;
+      dragRef.current.lastIdx = slotIdx;
+      setDragActive(slotIdx);
+    }, 400);
+    dragRef.current.timer = timer;
+  };
+
+  const cancelLongPress = () => clearTimeout(dragRef.current.timer);
 
   const addSingleItem = (exId) => {
     if (session.addedItems.some(i => i.type === "single" && i.id === exId)) return;
+    const itemId = `a${Date.now()}`;
     setSession(s => ({
       ...s,
-      addedItems: [...s.addedItems, { type: "single", id: exId }],
+      addedItems: [...s.addedItems, { type: "single", id: exId, itemId }],
+      slots: [...s.slots, { type: "added", itemId }],
       exerciseOrder: s.exerciseOrder.includes(exId) ? s.exerciseOrder : [...s.exerciseOrder, exId],
     }));
   };
 
   const addGroupItem = (label, exercises) => {
+    const itemId = `a${Date.now()}`;
     setSession(s => ({
       ...s,
-      addedItems: [...s.addedItems, { type: "group", label, exercises }],
+      addedItems: [...s.addedItems, { type: "group", label, exercises, itemId }],
+      slots: [...s.slots, { type: "added", itemId }],
       exerciseOrder: [...s.exerciseOrder, ...exercises.filter(id => !s.exerciseOrder.includes(id))],
     }));
   };
 
-  const removeAddedItem = (idx) => {
+  const removeAddedItem = (itemId) => {
     setSession(s => {
-      const item = s.addedItems[idx];
+      const item = s.addedItems.find(i => i.itemId === itemId);
+      if (!item) return s;
       const ids = item.type === "single" ? [item.id] : item.exercises;
       return {
         ...s,
-        addedItems: s.addedItems.filter((_, i) => i !== idx),
+        addedItems: s.addedItems.filter(i => i.itemId !== itemId),
+        slots: s.slots.filter(sl => !(sl.type === "added" && sl.itemId === itemId)),
         exerciseOrder: s.exerciseOrder.filter(id => !ids.includes(id)),
         log: Object.fromEntries(Object.entries(s.log).filter(([k]) => !ids.includes(k))),
       };
-    });
-  };
-
-  const moveAddedItem = (idx, dir) => {
-    setSession(s => {
-      const items = [...s.addedItems];
-      const next = idx + dir;
-      if (next < 0 || next >= items.length) return s;
-      [items[idx], items[next]] = [items[next], items[idx]];
-      return { ...s, addedItems: items };
     });
   };
 
@@ -716,20 +840,24 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
     const items = [];
     if (group.choices) {
       const key = `g${gi}_c1`;
-      const chosen = session.choices[key] || null;
-      items.push(<ChoicePicker key={key + "_p"} choices={group.choices} chosen={chosen} onChoose={id => setChoice(key, id)} label="Choose one" />);
-      if (chosen) {
-        const c = group.choices.find(x => x.id === chosen);
-        items.push(<ExerciseCard key={chosen} exerciseId={chosen} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} />);
+      if (!session.hiddenChoices?.includes(key)) {
+        const chosen = session.choices[key] || null;
+        items.push(<ChoicePicker key={key + "_p"} choices={group.choices} chosen={chosen} onChoose={id => setChoice(key, id)} onHide={() => hideChoiceGroup(key)} label="Choose one" customExercises={customExercises} />);
+        if (chosen) {
+          const c = group.choices.find(x => x.id === chosen);
+          items.push(<ExerciseCard key={chosen} exerciseId={chosen} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} onRemove={() => setChoice(key, chosen)} />);
+        }
       }
     }
     if (group.choices2) {
       const key = `g${gi}_c2`;
-      const chosen = session.choices[key] || null;
-      items.push(<ChoicePicker key={key + "_p"} choices={group.choices2} chosen={chosen} onChoose={id => setChoice(key, id)} label="Choose one" />);
-      if (chosen) {
-        const c = group.choices2.find(x => x.id === chosen);
-        items.push(<ExerciseCard key={chosen} exerciseId={chosen} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} />);
+      if (!session.hiddenChoices?.includes(key)) {
+        const chosen = session.choices[key] || null;
+        items.push(<ChoicePicker key={key + "_p"} choices={group.choices2} chosen={chosen} onChoose={id => setChoice(key, id)} onHide={() => hideChoiceGroup(key)} label="Choose one" customExercises={customExercises} />);
+        if (chosen) {
+          const c = group.choices2.find(x => x.id === chosen);
+          items.push(<ExerciseCard key={chosen} exerciseId={chosen} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} onRemove={() => setChoice(key, chosen)} />);
+        }
       }
     }
     if (group.exercises) {
@@ -742,73 +870,118 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
   };
 
   return (
-    <div>
-      <Timer startTime={timerStart} />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #2a2a24", marginBottom: 16 }}>
-        <button onClick={onBack} style={{ background: "none", border: "none", color: "#8a8a6a", fontSize: 14, cursor: "pointer", padding: 0 }}>← Back</button>
-        <div style={{ display: "flex", gap: 8 }}>
-          {totalSets > 0 && <button onClick={() => setShowExport(true)} style={S.btn(false)}>Export</button>}
-          {!started ? (
-            <button onClick={handleStart} style={S.btn(true)}>Start Workout</button>
-          ) : (
-            <button onClick={handleFinish} style={{ ...S.btn(totalSets > 0), background: totalSets > 0 ? "#4a6a2a" : "#2a2a24", color: totalSets > 0 ? "#d4e8c4" : "#5a5a4a" }}>Finish</button>
-          )}
+    <div style={{ paddingBottom: 88 }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 10, background: "#1a1a14ee", backdropFilter: "blur(8px)", borderBottom: "1px solid #2a2a24", overflow: "hidden", margin: "0 -16px", padding: "0 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "13px 0 4px" }}>
+          <button onClick={onBack} style={{ background: "none", border: "none", color: "#8a8a6a", fontSize: 18, cursor: "pointer", padding: 0, lineHeight: 1, flexShrink: 0 }}>←</button>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: 17, color: "#e8e4d8" }}>{workout.icon} {workout.name}</div>
+            <div style={{ fontSize: 12, color: "#6a6a5a", marginTop: 2 }}>{totalSets} sets logged</div>
+          </div>
+          {totalSets > 0 && <button onClick={() => setShowExport(true)} style={{ ...S.btn(false), padding: "4px 10px", fontSize: 12 }}>Export</button>}
         </div>
+        {timerStart && <div style={{ borderTop: "1px solid #2a2a24", marginTop: 8, background: "rgba(74,106,42,0.13)", margin: "8px -16px 0", padding: "0 16px" }}><Timer startTime={timerStart} lapAt={lapAt} onClick={() => setLapAt(Date.now())} /></div>}
       </div>
 
-      <h2 style={{ fontSize: 22, fontWeight: 700, color: "#e8e4d8", margin: "0 0 4px" }}>{workout.icon} {workout.name}</h2>
-      <div style={{ fontSize: 13, color: "#6a6a5a", marginBottom: 16 }}>{totalSets} sets logged</div>
+      <div style={{ height: 20 }} />
 
-      {workout.groups.map((group, gi) => (
-        <div key={gi} style={{ marginBottom: 16 }}>
-          {group.label && (
-            <div style={{ ...S.tag, padding: "4px 0", borderLeft: group.label.includes("Superset") ? "2px solid #5a4a2a" : "none", paddingLeft: group.label.includes("Superset") ? 10 : 0 }}>{group.label}</div>
-          )}
-          {renderGroup(group, gi)}
-        </div>
-      ))}
+      {(() => {
+        const slots = session.slots || [];
+        const n = slots.length;
+        const obtnStyle = (disabled) => ({
+          background: "none", border: "1px solid #2a2a24", borderRadius: 3,
+          color: disabled ? "#2a2a24" : "#6a6a5a", padding: "0 6px", fontSize: 12,
+          cursor: disabled ? "default" : "pointer",
+        });
+        const grip = (slotIdx) => (
+          <span
+            onTouchStart={(e) => startLongPress(slotIdx, e)}
+            onTouchEnd={cancelLongPress}
+            onTouchCancel={cancelLongPress}
+            style={{ color: "#4a4a3a", fontSize: 18, lineHeight: 1, padding: "0 4px", touchAction: "none", userSelect: "none", cursor: "grab" }}
+          >⠿</span>
+        );
+        const updown = (slotIdx) => (
+          <>
+            <button onClick={() => reorderSlots(slotIdx, slotIdx - 1)} disabled={slotIdx === 0} style={obtnStyle(slotIdx === 0)}>↑</button>
+            <button onClick={() => reorderSlots(slotIdx, slotIdx + 1)} disabled={slotIdx === n - 1} style={obtnStyle(slotIdx === n - 1)}>↓</button>
+          </>
+        );
 
-      {session.addedItems?.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <div style={S.tag}>Added</div>
-          {session.addedItems.map((item, idx) => {
-            const n = session.addedItems.length;
-            const orderBtns = (dir) => {
-              const disabled = dir === -1 ? idx === 0 : idx === n - 1;
-              return (
-                <button onClick={() => moveAddedItem(idx, dir)} disabled={disabled} style={{
-                  background: "none", border: "1px solid #2a2a24", borderRadius: 3,
-                  color: disabled ? "#2a2a24" : "#6a6a5a", padding: "0 6px", fontSize: 12,
-                  cursor: disabled ? "default" : "pointer",
-                }}>{dir === -1 ? "↑" : "↓"}</button>
-              );
-            };
-            if (item.type === "single") return (
-              <div key={idx}>
-                {n > 1 && <div style={{ display: "flex", justifyContent: "flex-end", gap: 4, marginBottom: 2 }}>{orderBtns(-1)}{orderBtns(1)}</div>}
-                <ExerciseCard exerciseId={item.id} scheme="" session={session} setSession={setSession} sessions={sessions} onRemove={() => removeAddedItem(idx)} isAdded customExercises={customExercises} />
-              </div>
-            );
+        return slots.map((slot, slotIdx) => {
+          const isDragged = dragActive === slotIdx;
+          const baseStyle = { marginBottom: 16, opacity: isDragged ? 0.5 : 1, transition: "opacity 0.1s" };
+
+          if (slot.type === "plan") {
+            const group = workout.groups[slot.gi];
+            const groupItems = renderGroup(group, slot.gi);
+            if (groupItems.length === 0) return null;
+            const hasLabel = !!group.label;
+            const isSuperset = group.label?.includes("Superset");
             return (
-              <div key={idx} style={{ background: "#1c1c18", border: "1px solid #2a2a24", borderRadius: 8, padding: "10px 12px", marginBottom: 6 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <div style={{ ...S.tag, marginBottom: 0, borderLeft: "2px solid #5a4a2a", paddingLeft: 8 }}>{item.label || "Group"}</div>
-                  <div style={{ display: "flex", gap: 4 }}>
-                    {n > 1 && <>{orderBtns(-1)}{orderBtns(1)}</>}
-                    <button onClick={() => removeAddedItem(idx)} style={{ background: "none", border: "1px solid #4a2a2a", borderRadius: 4, color: "#8a4a4a", padding: "0 8px", fontSize: 13, cursor: "pointer", marginLeft: 2 }}>×</button>
-                  </div>
+              <div key={`plan-${slot.gi}`} data-slot-idx={slotIdx} style={baseStyle}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: hasLabel ? 4 : 2 }}>
+                  {hasLabel
+                    ? <div style={{ ...S.tag, marginBottom: 0, padding: "4px 0", borderLeft: isSuperset ? "2px solid #5a4a2a" : "none", paddingLeft: isSuperset ? 10 : 0 }}>{group.label}</div>
+                    : <div />}
+                  {n > 1 && (
+                    <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                      {isTouch ? grip(slotIdx) : updown(slotIdx)}
+                    </div>
+                  )}
                 </div>
-                {item.exercises.map(exId => (
-                  <ExerciseCard key={exId} exerciseId={exId} scheme="" session={session} setSession={setSession} sessions={sessions} isAdded customExercises={customExercises} />
-                ))}
+                {groupItems}
               </div>
             );
-          })}
-        </div>
-      )}
+          }
+
+          // added slot
+          const item = session.addedItems.find(i => i.itemId === slot.itemId);
+          if (!item) return null;
+
+          if (item.type === "single") {
+            return (
+              <div key={item.itemId} data-slot-idx={slotIdx} style={baseStyle}>
+                {n > 1 && (
+                  <div style={{ display: "flex", justifyContent: "flex-end", gap: 4, alignItems: "center", marginBottom: 2 }}>
+                    {isTouch ? grip(slotIdx) : updown(slotIdx)}
+                  </div>
+                )}
+                <ExerciseCard exerciseId={item.id} scheme="" session={session} setSession={setSession} sessions={sessions} onRemove={() => removeAddedItem(item.itemId)} isAdded customExercises={customExercises} />
+              </div>
+            );
+          }
+
+          // added group
+          return (
+            <div key={item.itemId} data-slot-idx={slotIdx} style={{ ...baseStyle, background: "#1c1c18", border: "1px solid #2a2a24", borderRadius: 8, padding: "10px 12px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <div style={{ ...S.tag, marginBottom: 0, borderLeft: "2px solid #5a4a2a", paddingLeft: 8 }}>{item.label || "Group"}</div>
+                <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                  {n > 1 && (isTouch ? grip(slotIdx) : updown(slotIdx))}
+                  <button onClick={() => removeAddedItem(item.itemId)} style={{ background: "none", border: "1px solid #4a2a2a", borderRadius: 4, color: "#8a4a4a", padding: "0 8px", fontSize: 13, cursor: "pointer", marginLeft: 2 }}>×</button>
+                </div>
+              </div>
+              {item.exercises.map(exId => (
+                <ExerciseCard key={exId} exerciseId={exId} scheme="" session={session} setSession={setSession} sessions={sessions} isAdded customExercises={customExercises} />
+              ))}
+            </div>
+          );
+        });
+      })()}
 
       <ExerciseSearch onAdd={addSingleItem} session={session} customExercises={customExercises} setCustomExercises={setCustomExercises} />
       <GroupCreator onAdd={addGroupItem} session={session} customExercises={customExercises} />
+
+      <div style={{ position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 480, padding: "24px 16px 28px", background: "linear-gradient(to bottom, transparent, #141410 40%)", zIndex: 50, pointerEvents: "none" }}>
+        <button
+          onClick={!started ? handleStart : handleFinish}
+          style={{ pointerEvents: "all", width: "100%", padding: "15px", fontSize: 15, fontWeight: 600, textAlign: "center", background: started ? "#4a6a2a" : "#2e3d20", color: started ? "#d4e8c4" : "#a8c888", border: "none", borderRadius: 10, cursor: "pointer" }}
+        >
+          {!started ? "Start Workout" : "Finish Workout"}
+        </button>
+      </div>
+
       {showExport && <ExportModal text={exportSession(session, workout, customExercises)} onClose={() => setShowExport(false)} />}
       {showFinishModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 100, padding: 16 }}>
@@ -883,8 +1056,14 @@ function HistoryView({ sessions, workouts, onBack, customExercises }) {
 
 // ─── Home ──────────────────────────────────────────────────────────
 function HomeScreen({ workouts, onSelectWorkout, onShowHistory, onFreeWorkout, onManagePlans, sessions, wip, onResume }) {
-  const lastByWorkout = {};
-  sessions.forEach(s => { lastByWorkout[s.workoutId] = s.date; });
+  const recentByWorkout = {};
+  sessions.forEach(s => {
+    if (!recentByWorkout[s.workoutId]) recentByWorkout[s.workoutId] = [];
+    recentByWorkout[s.workoutId].push({ date: s.date, duration: s.duration });
+  });
+  Object.keys(recentByWorkout).forEach(id => {
+    recentByWorkout[id] = recentByWorkout[id].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+  });
   return (
     <div>
       <div style={{ padding: "24px 0 20px" }}>
@@ -901,8 +1080,8 @@ function HomeScreen({ workouts, onSelectWorkout, onShowHistory, onFreeWorkout, o
             </div>
           </div>
           {wip.session.startTime && (
-            <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: "#a8c888", flexShrink: 0 }}>
-              <InlineTimer startTime={wip.session.startTime} />
+            <div style={{ flexShrink: 0 }}>
+              <InlineTimer startTime={wip.session.startTime} lapAt={wip.lapAt || null} />
             </div>
           )}
         </div>
@@ -912,18 +1091,27 @@ function HomeScreen({ workouts, onSelectWorkout, onShowHistory, onFreeWorkout, o
         <button onClick={onManagePlans} style={{ ...S.btn(false), fontSize: 11, padding: "3px 10px" }}>Manage</button>
       </div>
       {workouts.map(w => {
-        const last = lastByWorkout[w.id];
+        const recent = recentByWorkout[w.id] || [];
         return (
           <button key={w.id} onClick={() => onSelectWorkout(w)} style={{
             display: "block", width: "100%", textAlign: "left", background: "#1c1c18", border: "1px solid #2a2a24",
             borderRadius: 10, padding: "16px 18px", marginBottom: 8, cursor: "pointer",
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div>
                 <div style={{ fontSize: 17, fontWeight: 700, color: "#e8e4d8" }}>{w.icon} {w.name}</div>
-                {last && <div style={{ fontSize: 12, color: "#5a5a4a", marginTop: 3 }}>Last: {formatDate(last)}</div>}
+                {recent.length > 0 && (
+                  <div style={{ marginTop: 5, fontSize: 12, color: "#5a5a4a" }}>
+                    {recent.map((r, i) => (
+                      <span key={i}>
+                        {i > 0 && <span style={{ margin: "0 6px", color: "#3a3a2a" }}>·</span>}
+                        {formatDate(r.date)}{r.duration ? ` – ${fmtTime(r.duration)}` : ""}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div style={{ color: "#4a4a3a", fontSize: 20 }}>›</div>
+              <div style={{ color: "#4a4a3a", fontSize: 20, flexShrink: 0, marginLeft: 8 }}>›</div>
             </div>
           </button>
         );
@@ -960,9 +1148,9 @@ export default function App() {
 
   useEffect(() => {
     Promise.all([
-      loadData("workout-sessions", []),
-      loadData("workout-custom-exercises", []),
-      loadData("workout-plans", null),
+      loadData(KEY_PREFIX + "workout-sessions", []),
+      loadData(KEY_PREFIX + "workout-custom-exercises", []),
+      loadData(KEY_PREFIX + "workout-plans", null),
     ]).then(([s, c, w]) => {
       setSessions(s);
       setCustomExercises(c);
@@ -971,7 +1159,7 @@ export default function App() {
     });
   }, []);
 
-  useEffect(() => { if (loaded && customExercises.length > 0) saveData("workout-custom-exercises", customExercises); }, [customExercises, loaded]);
+  useEffect(() => { if (loaded && customExercises.length > 0) saveData(KEY_PREFIX + "workout-custom-exercises", customExercises); }, [customExercises, loaded]);
 
   const handleFinish = useCallback(async (session) => {
     localStorage.removeItem("wip");
@@ -979,7 +1167,7 @@ export default function App() {
     const filtered = sessions.filter(s => !(s.date === session.date && s.workoutId === session.workoutId));
     const updated = [...filtered, session];
     setSessions(updated);
-    await saveData("workout-sessions", updated);
+    await saveData(KEY_PREFIX + "workout-sessions", updated);
     setView("home"); setActiveWorkout(null);
   }, [sessions]);
 
@@ -1007,14 +1195,14 @@ export default function App() {
       ? workouts.map(w => w.id === workout.id ? workout : w)
       : [...workouts, workout];
     setWorkouts(updated);
-    saveData("workout-plans", updated);
+    saveData(KEY_PREFIX + "workout-plans", updated);
     setView("plan-list");
   }, [workouts]);
 
   const handleDeleteWorkout = useCallback((workoutId) => {
     const updated = workouts.filter(w => w.id !== workoutId);
     setWorkouts(updated);
-    saveData("workout-plans", updated);
+    saveData(KEY_PREFIX + "workout-plans", updated);
   }, [workouts]);
 
   if (!loaded) return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: "#141410", color: "#5a5a4a" }}>Loading...</div>;
@@ -1023,7 +1211,7 @@ export default function App() {
     <div style={{ background: "#141410", minHeight: "100vh", color: "#e8e4d8", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", maxWidth: 480, margin: "0 auto", padding: "0 16px" }}>
       <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
       {view === "home" && <HomeScreen workouts={workouts} onSelectWorkout={w => { setActiveWorkout(w); setView("workout"); }} onShowHistory={() => setView("history")} onFreeWorkout={() => { setActiveWorkout(FREE_WORKOUT); setView("workout"); }} onManagePlans={() => setView("plan-list")} sessions={sessions} wip={wip} onResume={handleResume} />}
-      {view === "workout" && activeWorkout && <WorkoutView workout={activeWorkout} sessions={sessions} onBack={goHome} onFinish={handleFinish} onDiscard={handleDiscard} customExercises={customExercises} setCustomExercises={setCustomExercises} />}
+      {view === "workout" && activeWorkout && <WorkoutView workout={activeWorkout} sessions={sessions} onBack={goHome} onFinish={handleFinish} onDiscard={handleDiscard} customExercises={customExercises} setCustomExercises={setCustomExercises} initialLapAt={wip?.lapAt || null} />}
       {view === "history" && <HistoryView sessions={sessions} workouts={workouts} onBack={() => setView("home")} customExercises={customExercises} />}
       {view === "plan-list" && <PlanListView workouts={workouts} onBack={() => setView("home")} onEdit={w => { setEditingWorkout(w); setView("plan-editor"); }} onNew={() => { setEditingWorkout(null); setView("plan-editor"); }} onDelete={handleDeleteWorkout} />}
       {view === "plan-editor" && <WorkoutEditor workout={editingWorkout} onSave={handleSaveWorkout} onCancel={() => setView("plan-list")} customExercises={customExercises} setCustomExercises={setCustomExercises} />}
