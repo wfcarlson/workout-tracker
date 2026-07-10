@@ -132,11 +132,18 @@ async function saveData(key, val) {
   } catch (e) { console.error("Save failed", e); }
 }
 
+function getSessionEquipment(session, exerciseId) {
+  return session.equipment?.[exerciseId]
+    || session.log?.[exerciseId]?.find(s => s.equipment)?.equipment
+    || session.log?.[exerciseId]?.find(s => s.equip)?.equip
+    || null;
+}
+
 function getHistory(sessions, exerciseId, limit = 3) {
   const results = [];
   for (let i = sessions.length - 1; i >= 0 && results.length < limit; i--) {
     const s = sessions[i];
-    if (s.log?.[exerciseId]?.length > 0) results.push({ date: s.date, sets: s.log[exerciseId] });
+    if (s.log?.[exerciseId]?.length > 0) results.push({ date: s.date, sets: s.log[exerciseId], equipment: getSessionEquipment(s, exerciseId) });
   }
   return results;
 }
@@ -144,6 +151,7 @@ function getHistory(sessions, exerciseId, limit = 3) {
 function formatDate(d) { return new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }); }
 function todayStr() { return new Date().toISOString().slice(0, 10); }
 function fmtTime(sec) { const m = Math.floor(sec / 60); const s = sec % 60; return `${m}:${s < 10 ? "0" : ""}${s}`; }
+function formatSetList(sets) { return sets.map(s => s.weight > 0 ? `${s.weight}×${s.reps}` : `${s.reps}`).join(" · "); }
 
 function exportSession(session, workout, customExercises) {
   const date = new Date(session.date + "T12:00:00");
@@ -157,22 +165,26 @@ function exportSession(session, workout, customExercises) {
     const sets = session.log[exId];
     if (!sets || sets.length === 0) continue;
     const ex = allEx.find(e => e.id === exId) || { name: exId };
+    const equipment = getSessionEquipment(session, exId);
+    const equip = equipment ? ` (${equipment})` : "";
     const hasWeight = sets.some(s => s.weight > 0);
     if (hasWeight) {
       const weights = [...new Set(sets.map(s => s.weight))];
       const reps = sets.map(s => s.reps).join(",");
-      if (weights.length === 1) lines.push(`${ex.name} ${weights[0]} - ${reps}`);
-      else lines.push(`${ex.name} ${sets.map(s => `${s.weight}x${s.reps}`).join(",")}`);
+      if (weights.length === 1) lines.push(`${ex.name}${equip} ${weights[0]} - ${reps}`);
+      else lines.push(`${ex.name}${equip} ${sets.map(s => `${s.weight}x${s.reps}`).join(",")}`);
     } else {
-      lines.push(`${ex.name} ${sets.map(s => s.reps).join(",")}`);
+      lines.push(`${ex.name}${equip} ${sets.map(s => s.reps).join(",")}`);
     }
   }
   return lines.join("\n");
 }
 
 // ─── Styles ────────────────────────────────────────────────────────
+const EQUIP_OPTIONS = ["DB", "BB", "EZ", "KB", "BW", "Cable"];
+
 const S = {
-  input: { padding: "7px 8px", background: "#2a2a24", border: "1px solid #3a3a32", borderRadius: 4, color: "#e8e4d8", fontSize: 14, fontFamily: "'JetBrains Mono', monospace", textAlign: "center", outline: "none" },
+  input: { padding: "7px 8px", background: "#2a2a24", border: "1px solid #3a3a32", borderRadius: 4, color: "#e8e4d8", fontSize: 16, fontFamily: "'JetBrains Mono', monospace", textAlign: "center", outline: "none" },
   btn: (active) => ({ background: active ? "#4a6a2a" : "none", border: `1px solid ${active ? "#5a7a3a" : "#3a3a32"}`, borderRadius: 6, color: active ? "#d4e8c4" : "#8a8a6a", padding: "6px 14px", fontSize: 13, cursor: "pointer", fontWeight: active ? 600 : 400 }),
   tag: { fontSize: 11, color: "#5a5a4a", textTransform: "uppercase", letterSpacing: 1.1, fontWeight: 700, marginBottom: 6 },
 };
@@ -227,6 +239,9 @@ function ChoicePicker({ choices, chosen, onChoose, onHide, label, customExercise
   const [otherQuery, setOtherQuery] = useState("");
   const allEx = [...ALL_EXERCISES, ...(customExercises || [])];
   const choiceIds = new Set(choices.map(c => c.id));
+  const chosenIds = Array.isArray(chosen) ? chosen : chosen ? [chosen] : [];
+  const bothIds = choices.map(c => c.id);
+  const bothSelected = bothIds.length > 1 && bothIds.every(id => chosenIds.includes(id));
   const otherResults = otherQuery.length > 0
     ? allEx.filter(e => !choiceIds.has(e.id) && e.name.toLowerCase().includes(otherQuery.toLowerCase())).slice(0, 5)
     : [];
@@ -241,11 +256,14 @@ function ChoicePicker({ choices, chosen, onChoose, onHide, label, customExercise
       </div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
         {choices.map(c => {
-          const ex = getExercise(c.id);
+          const ex = getExercise(c.id, customExercises);
           return (
-            <button key={c.id} onClick={() => onChoose(c.id)} style={{ ...S.btn(chosen === c.id), padding: "5px 12px", fontSize: 12 }}>{ex.name}</button>
+            <button key={c.id} onClick={() => onChoose(c.id)} style={{ ...S.btn(chosenIds.length === 1 && chosenIds[0] === c.id), padding: "5px 12px", fontSize: 12 }}>{ex.name}</button>
           );
         })}
+        {choices.length > 1 && (
+          <button onClick={() => onChoose(bothIds)} style={{ ...S.btn(bothSelected), padding: "5px 12px", fontSize: 12 }}>Both</button>
+        )}
       </div>
       {pickingOther && (
         <div style={{ marginTop: 6 }}>
@@ -270,6 +288,15 @@ function ChoicePicker({ choices, chosen, onChoose, onHide, label, customExercise
 
 function SetLogger({ exerciseId, exercise, session, setSession }) {
   const logged = session.log[exerciseId] || [];
+  const equipment = session.equipment?.[exerciseId] || null;
+
+  const setEquipment = (type) => {
+    setSession(s => ({
+      ...s,
+      equipment: { ...(s.equipment || {}), [exerciseId]: s.equipment?.[exerciseId] === type ? null : type },
+    }));
+  };
+
   const addSet = () => {
     const last = logged.length > 0 ? logged[logged.length - 1] : { weight: exercise.defaultWeight, reps: exercise.defaultReps };
     setSession(s => ({
@@ -288,6 +315,24 @@ function SetLogger({ exerciseId, exercise, session, setSession }) {
   };
   return (
     <div style={{ marginTop: 6 }}>
+      <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
+        {EQUIP_OPTIONS.map(opt => (
+          <button key={opt} onClick={() => setEquipment(opt)} style={{
+            background: equipment === opt ? "#2a3a1a" : "none",
+            border: `1px solid ${equipment === opt ? "#4a5a2a" : "#2a2a24"}`,
+            borderRadius: 4, color: equipment === opt ? "#a8c878" : "#4a4a3a",
+            padding: "2px 7px", fontSize: 11, cursor: "pointer", fontFamily: "'JetBrains Mono', monospace",
+          }}>{opt}</button>
+        ))}
+      </div>
+      {logged.length > 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+          <span style={{ width: 18, flexShrink: 0 }} />
+          <span style={{ width: 64, fontSize: 10, color: "#4a4a3a", textAlign: "center" }}>weight</span>
+          <span style={{ fontSize: 10, color: "#4a4a3a", width: 13, flexShrink: 0 }} />
+          <span style={{ width: 52, fontSize: 10, color: "#4a4a3a", textAlign: "center" }}>reps</span>
+        </div>
+      )}
       {logged.map((s, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <span style={{ color: "#8a8a7a", fontSize: 12, width: 18, flexShrink: 0 }}>S{i + 1}</span>
@@ -310,7 +355,8 @@ function ExerciseHistory({ exerciseId, sessions }) {
       {history.map((h, i) => (
         <div key={i} style={{ fontSize: 12, color: "#7a7a6a", marginBottom: 2, fontFamily: "'JetBrains Mono', monospace" }}>
           <span style={{ color: "#5a5a4a" }}>{formatDate(h.date)}</span>{" "}
-          {h.sets.map((s, j) => <span key={j}>{j > 0 && <span style={{ color: "#4a4a3a" }}> · </span>}{s.weight > 0 ? `${s.weight}×${s.reps}` : `${s.reps}`}</span>)}
+          {h.equipment && <span style={{ color: "#8ab86a", fontWeight: 600 }}>{h.equipment} </span>}
+          {formatSetList(h.sets)}
         </div>
       ))}
     </div>
@@ -334,8 +380,11 @@ function ExerciseCard({ exerciseId, scheme, session, setSession, sessions, onRem
             {exercise.name}
             {isAdded && <span style={{ fontSize: 10, color: "#6a6a4a", marginLeft: 6 }}>added</span>}
           </div>
-          {done && <span style={{ fontSize: 11, color: "#6a8a4a", fontWeight: 600, flexShrink: 0, marginLeft: 8 }}>
-            {logged.map((s, i) => (i > 0 ? " · " : "") + (s.weight > 0 ? `${s.weight}×${s.reps}` : `${s.reps}`))}
+          {done && <span style={{ fontSize: 11, color: "#6a8a4a", fontWeight: 600, flexShrink: 0, marginLeft: 8, display: "flex", alignItems: "center", gap: 4 }}>
+            {session?.equipment?.[exerciseId] && (
+              <span style={{ fontSize: 10, color: "#5a7a3a", background: "#1e2a14", border: "1px solid #3a4a2a", borderRadius: 3, padding: "1px 4px", fontFamily: "'JetBrains Mono', monospace" }}>{session.equipment[exerciseId]}</span>
+            )}
+            <span>{logged.map((s, i) => (i > 0 ? " · " : "") + (s.weight > 0 ? `${s.weight}×${s.reps}` : `${s.reps}`))}</span>
           </span>}
         </div>
         {scheme && <div style={{ fontSize: 12, color: "#6a6a5a", marginTop: 2 }}>{scheme}</div>}
@@ -557,7 +606,9 @@ function WorkoutEditor({ workout, onSave, onCancel, customExercises, setCustomEx
     if (!workout) return [{ label: "", exercises: [] }];
     return workout.groups.map(g => ({
       label: g.label || "",
-      exercises: [...(g.exercises || []), ...(g.choices || []), ...(g.choices2 || [])],
+      exercises: [...(g.exercises || [])],
+      choices: [...(g.choices || [])],
+      choices2: [...(g.choices2 || [])],
     }));
   });
   const [ssPicker, setSsPicker] = useState(null); // { gi, ei }
@@ -572,11 +623,39 @@ function WorkoutEditor({ workout, onSave, onCancel, customExercises, setCustomEx
   }));
   const removeEx = (gi, ei) => setGroups(gs => gs.map((g, i) => i === gi ? { ...g, exercises: g.exercises.filter((_, j) => j !== ei) } : g));
   const setScheme = (gi, ei, scheme) => setGroups(gs => gs.map((g, i) => i === gi ? { ...g, exercises: g.exercises.map((e, j) => j === ei ? { ...e, scheme } : e) } : g));
+  const choiceKeys = ["choices", "choices2"];
+  const allGroupIds = (group) => [...(group.exercises || []), ...(group.choices || []), ...(group.choices2 || [])].map(e => e.id);
+  const addChoiceGroup = (gi) => {
+    setGroups(gs => gs.map((g, i) => {
+      if (i !== gi) return g;
+      const key = g.choices ? "choices2" : "choices";
+      return { ...g, [key]: g[key] || [] };
+    }));
+    const group = groups[gi];
+    setSsPicker({ gi, choiceType: group?.choices ? "choices2" : "choices" });
+  };
+  const addChoiceOption = (gi, choiceType, id) => setGroups(gs => gs.map((g, i) => i === gi ? { ...g, [choiceType]: [...(g[choiceType] || []), { id, scheme: "" }] } : g));
+  const removeChoiceGroup = (gi, choiceType) => setGroups(gs => gs.map((g, i) => {
+    if (i !== gi) return g;
+    const next = { ...g };
+    delete next[choiceType];
+    return next;
+  }));
+  const removeChoiceOption = (gi, choiceType, ci) => setGroups(gs => gs.map((g, i) => i === gi ? { ...g, [choiceType]: (g[choiceType] || []).filter((_, j) => j !== ci) } : g));
+  const setChoiceScheme = (gi, choiceType, ci, scheme) => setGroups(gs => gs.map((g, i) => i === gi ? { ...g, [choiceType]: (g[choiceType] || []).map((e, j) => j === ci ? { ...e, scheme } : e) } : g));
 
   const handleSave = () => {
     if (!name.trim()) return;
     const id = workout?.id || "custom_" + Date.now();
-    const cleanGroups = groups.filter(g => g.exercises.length > 0).map(g => ({ label: g.label || null, exercises: g.exercises }));
+    const cleanGroups = groups
+      .filter(g => (g.exercises || []).length > 0 || (g.choices || []).length > 0 || (g.choices2 || []).length > 0)
+      .map(g => {
+        const clean = { label: g.label || null };
+        if ((g.exercises || []).length > 0) clean.exercises = g.exercises;
+        if ((g.choices || []).length > 0) clean.choices = g.choices;
+        if ((g.choices2 || []).length > 0) clean.choices2 = g.choices2;
+        return clean;
+      });
     onSave({ id, name: name.trim(), icon: icon.trim() || "🏋️", groups: cleanGroups });
   };
 
@@ -621,8 +700,48 @@ function WorkoutEditor({ workout, onSave, onCancel, customExercises, setCustomEx
               </div>
             );
           })}
+          {choiceKeys.map(choiceType => {
+            if (!group[choiceType]) return null;
+            const pickerOpen = ssPicker?.gi === gi && ssPicker?.choiceType === choiceType;
+            return (
+              <div key={choiceType} style={{ background: "#141410", border: "1px solid #2a2a24", borderRadius: 6, padding: 8, margin: "8px 0" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
+                  <div style={{ ...S.tag, marginBottom: 0 }}>Choice of two</div>
+                  <button onClick={() => { setSsPicker(null); removeChoiceGroup(gi, choiceType); }}
+                    style={{ background: "none", border: "1px solid #4a2a2a", borderRadius: 4, color: "#8a4a4a", padding: "2px 7px", fontSize: 12, cursor: "pointer" }}>×</button>
+                </div>
+                {(group[choiceType] || []).map((ex, ci) => {
+                  const exDef = getExercise(ex.id, customExercises);
+                  return (
+                    <div key={`${choiceType}-${ex.id}-${ci}`} style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 4 }}>
+                      <div style={{ flex: 1, fontSize: 13, color: "#c8c4b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{exDef.name}</div>
+                      <input value={ex.scheme} onChange={e => setChoiceScheme(gi, choiceType, ci, e.target.value)} placeholder="Scheme"
+                        style={{ ...S.input, width: 110, fontSize: 11 }} />
+                      <button onClick={() => removeChoiceOption(gi, choiceType, ci)}
+                        style={{ background: "none", border: "1px solid #4a2a2a", borderRadius: 4, color: "#8a4a4a", padding: "4px 7px", fontSize: 12, cursor: "pointer" }}>×</button>
+                    </div>
+                  );
+                })}
+                {pickerOpen && (
+                  <div style={{ marginTop: 6, background: "#1c1c18", border: "1px solid #3a3a32", borderRadius: 6, padding: 8 }}>
+                    <InlinePicker exclude={allGroupIds(group)} customExercises={customExercises}
+                      onPick={(id) => { addChoiceOption(gi, choiceType, id); setSsPicker(null); }}
+                      onCancel={() => setSsPicker(null)} />
+                  </div>
+                )}
+                {(group[choiceType] || []).length < 2 && !pickerOpen && (
+                  <button onClick={() => setSsPicker({ gi, choiceType })} style={{ ...S.btn(false), width: "100%", marginTop: 4, padding: "7px", textAlign: "center", fontSize: 12 }}>
+                    + Add Option
+                  </button>
+                )}
+              </div>
+            );
+          })}
+          {(!group.choices || !group.choices2) && (
+            <button onClick={() => addChoiceGroup(gi)} style={{ ...S.btn(false), width: "100%", marginTop: 6, padding: "8px", textAlign: "center", fontSize: 12 }}>+ Add Choice of Two</button>
+          )}
           <ExerciseSearch onAdd={(id) => addToGroup(gi, id)}
-            session={{ exerciseOrder: group.exercises.map(e => e.id), addedExercises: [] }}
+            session={{ exerciseOrder: allGroupIds(group), addedExercises: [] }}
             customExercises={customExercises} setCustomExercises={setCustomExercises} />
         </div>
       ))}
@@ -684,7 +803,7 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
     if (!raw) raw = existing || null;
     const s = raw
       ? { choices: {}, hiddenExercises: [], hiddenChoices: [], ...raw }
-      : { date: todayStr(), workoutId: workout.id, log: {}, exerciseOrder: [], choices: {}, hiddenExercises: [], hiddenChoices: [], startTime: null, duration: null };
+      : { date: todayStr(), workoutId: workout.id, log: {}, exerciseOrder: [], choices: {}, hiddenExercises: [], hiddenChoices: [], equipment: {}, startTime: null, duration: null };
     if (!s.addedItems) {
       s.addedItems = (s.addedExercises || []).map((id, i) => ({ type: "single", id, itemId: `m${i}` }));
     } else {
@@ -761,13 +880,22 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
   };
 
   const handleFinish = () => {
-    if (totalSets === 0) { onBack(); return; }
+    if (totalSets === 0) { onDiscard(); return; }
     setShowFinishModal(true);
   };
 
-  const setChoice = (key, exId) => setSession(s => ({
-    ...s, choices: { ...s.choices, [key]: s.choices[key] === exId ? null : exId },
-  }));
+  const setChoice = (key, value) => setSession(s => {
+    const current = s.choices[key];
+    const same = JSON.stringify(current || null) === JSON.stringify(value || null);
+    return { ...s, choices: { ...s.choices, [key]: same ? null : value } };
+  });
+
+  const removeChoiceExercise = (key, exId) => setSession(s => {
+    const current = s.choices[key];
+    if (!Array.isArray(current)) return { ...s, choices: { ...s.choices, [key]: null } };
+    const next = current.filter(id => id !== exId);
+    return { ...s, choices: { ...s.choices, [key]: next.length > 0 ? next : null } };
+  });
 
   const hideChoiceGroup = (key) => setSession(s => ({
     ...s,
@@ -842,22 +970,24 @@ function WorkoutView({ workout, sessions, onBack, onFinish, onDiscard, customExe
       const key = `g${gi}_c1`;
       if (!session.hiddenChoices?.includes(key)) {
         const chosen = session.choices[key] || null;
-        items.push(<ChoicePicker key={key + "_p"} choices={group.choices} chosen={chosen} onChoose={id => setChoice(key, id)} onHide={() => hideChoiceGroup(key)} label="Choose one" customExercises={customExercises} />);
-        if (chosen) {
-          const c = group.choices.find(x => x.id === chosen);
-          items.push(<ExerciseCard key={chosen} exerciseId={chosen} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} onRemove={() => setChoice(key, chosen)} />);
-        }
+        const chosenIds = Array.isArray(chosen) ? chosen : chosen ? [chosen] : [];
+        items.push(<ChoicePicker key={key + "_p"} choices={group.choices} chosen={chosen} onChoose={id => setChoice(key, id)} onHide={() => hideChoiceGroup(key)} label="Choose one / both" customExercises={customExercises} />);
+        chosenIds.forEach(chosenId => {
+          const c = group.choices.find(x => x.id === chosenId);
+          items.push(<ExerciseCard key={chosenId} exerciseId={chosenId} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} onRemove={() => removeChoiceExercise(key, chosenId)} />);
+        });
       }
     }
     if (group.choices2) {
       const key = `g${gi}_c2`;
       if (!session.hiddenChoices?.includes(key)) {
         const chosen = session.choices[key] || null;
-        items.push(<ChoicePicker key={key + "_p"} choices={group.choices2} chosen={chosen} onChoose={id => setChoice(key, id)} onHide={() => hideChoiceGroup(key)} label="Choose one" customExercises={customExercises} />);
-        if (chosen) {
-          const c = group.choices2.find(x => x.id === chosen);
-          items.push(<ExerciseCard key={chosen} exerciseId={chosen} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} onRemove={() => setChoice(key, chosen)} />);
-        }
+        const chosenIds = Array.isArray(chosen) ? chosen : chosen ? [chosen] : [];
+        items.push(<ChoicePicker key={key + "_p"} choices={group.choices2} chosen={chosen} onChoose={id => setChoice(key, id)} onHide={() => hideChoiceGroup(key)} label="Choose one / both" customExercises={customExercises} />);
+        chosenIds.forEach(chosenId => {
+          const c = group.choices2.find(x => x.id === chosenId);
+          items.push(<ExerciseCard key={chosenId} exerciseId={chosenId} scheme={c?.scheme} session={session} setSession={setSession} sessions={sessions} customExercises={customExercises} onRemove={() => removeChoiceExercise(key, chosenId)} />);
+        });
       }
     }
     if (group.exercises) {
@@ -1041,6 +1171,7 @@ function HistoryView({ sessions, workouts, onBack, customExercises }) {
                 return (
                   <div key={exId} style={{ fontSize: 12, color: "#7a7a6a", marginBottom: 1, fontFamily: "'JetBrains Mono', monospace" }}>
                     <span style={{ color: "#8a8a7a" }}>{ex.name}:</span>{" "}
+                    {getSessionEquipment(s, exId) && <span style={{ fontSize: 10, color: "#5a7a3a", background: "#1e2a14", border: "1px solid #3a4a2a", borderRadius: 3, padding: "1px 4px", marginRight: 4 }}>{getSessionEquipment(s, exId)}</span>}
                     {sets.map((s2, j) => <span key={j}>{j > 0 && " · "}{s2.weight > 0 ? `${s2.weight}×${s2.reps}` : `${s2.reps}`}</span>)}
                   </div>
                 );
